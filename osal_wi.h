@@ -57,7 +57,7 @@ int osal_wi_dev2phy(const char *devname);
 /** control MAC address, ACK generation, sequence number generation */
 int osal_wi_set_mac(wi_dev *dev, const MacAddr &mac);
 int osal_wi_set_macmask(wi_dev *dev, const MacAddr &mask);
-int osal_wi_set_force_noack(wi_dev *dev, bool shouldRetry);
+int osal_wi_set_inject_noack(wi_dev *dev, bool noack);
 int osal_wi_set_preserve_seqnum(wi_dev *dev, bool ownSeqenceNo);
 
 /** ping to 802.11 MAC address by sending a 802.11 frame and waiting for an ACK */

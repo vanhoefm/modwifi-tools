@@ -333,13 +333,13 @@ int osal_wi_set_macmask(wi_dev *dev, const MacAddr &mask)
 	return writetocmd(dev, "bssidmask", mask.tostring());
 }
 
-int osal_wi_set_force_noack(wi_dev *dev, bool shouldRetry)
+int osal_wi_set_inject_noack(wi_dev *dev, bool noack)
 {
 	char num[16];
 
-	snprintf(num, sizeof(num), "%d", !shouldRetry);
+	snprintf(num, sizeof(num), "%d", noack);
 
-	return writetocmd(dev, "force_noack", num);
+	return writetocmd(dev, "inject_noack", num);
 }
 
 int osal_wi_set_preserve_seqnum(wi_dev *dev, bool ownSeqenceNo)
