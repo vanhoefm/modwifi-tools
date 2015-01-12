@@ -5,6 +5,8 @@
 #include <stdint.h>
 #include <set>
 
+#include "osal_wi.h"
+
 bool is_empty(const uint8_t *buffer, size_t len);
 
 static inline uint64_t absdiff64(uint64_t x, uint64_t y) {
@@ -44,6 +46,7 @@ const char * framesubtype(int type, int subtype);
 size_t add_qos_hdr(uint8_t *buf, size_t len, size_t maxlen);
 
 // Beacon functions
+int get_beacon(wi_dev *ap, uint8_t *buf, size_t len, char *ssid, const MacAddr &mac);
 bool beacon_get_ssid(uint8_t *buf, size_t len, char *outssid, size_t outlen);
 bool beacon_set_ssid(uint8_t *buf, size_t *len, size_t maxlen, char *newssid);
 int beacon_get_chan(uint8_t *buf, size_t len);

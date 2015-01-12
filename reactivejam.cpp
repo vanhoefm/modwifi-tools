@@ -126,35 +126,14 @@ bool parseConsoleArgs(int argc, char *argv[])
 }
 
 
-bool is_our_beacon(uint8_t *buf, size_t len, void *data)
-{
-	ieee80211header *hdr = (ieee80211header*)buf;
-	char ssid[256];
-
-	if (len < sizeof(ieee80211header) || hdr->fc.type != 0 || hdr->fc.subtype != 8
-		|| memcmp(hdr->addr1, "\xFF\xFF\xFF\xFF\xFF\xFF", 6) != 0)
-		return false;
-
-	if (opt.bssid == MacAddr(hdr->addr2))
-		return true;
-
-	if (beacon_get_ssid(buf, len, ssid, sizeof(ssid)) && strcmp(ssid, opt.ssid) == 0)
-		return true;
-
-	return false;
-}
-
 int find_ap(wi_dev *dev)
 {
 	uint8_t buf[2048];
 	ieee80211header *beaconhdr = (ieee80211header*)buf;
-	struct timespec timeout;
 	size_t len;
 	int chan;
 
-	timeout.tv_sec = 1;
-	timeout.tv_nsec = 0;
-	len = osal_wi_sniff(dev, buf, sizeof(buf), is_our_beacon, NULL, &timeout);
+	len = get_beacon(dev, buf, sizeof(buf), opt.ssid, opt.bssid);
 	if (len <= 0) {
 		printf("Failed to capture beacon on AP interface\n");
 		return -1;

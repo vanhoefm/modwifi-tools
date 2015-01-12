@@ -350,6 +350,43 @@ size_t add_qos_hdr(uint8_t *buf, size_t len, size_t maxlen)
 //
 // ===========================================
 
+struct NetInfo {
+	char *ssid;
+	MacAddr bssid;
+};
+
+static bool is_our_beacon(uint8_t *buf, size_t len, void *data)
+{
+	struct NetInfo *info = (struct NetInfo *)data;
+	ieee80211header *hdr = (ieee80211header*)buf;
+	char packet_ssid[256];
+
+	if (len < sizeof(ieee80211header) || hdr->fc.type != 0 || hdr->fc.subtype != 8
+		|| memcmp(hdr->addr1, "\xFF\xFF\xFF\xFF\xFF\xFF", 6) != 0)
+		return false;
+
+	if (!info->bssid.empty() && info->bssid == MacAddr(hdr->addr2))
+		return true;
+
+	if (info->ssid && beacon_get_ssid(buf, len, packet_ssid, sizeof(packet_ssid))
+	    && strcmp(info->ssid, packet_ssid) == 0)
+		return true;
+
+	return false;
+}
+
+int get_beacon(wi_dev *ap, uint8_t *buf, size_t len, char *ssid, const MacAddr &mac)
+{
+	struct timespec timeout;
+	struct NetInfo info;
+
+	timeout.tv_sec = 2;
+	timeout.tv_nsec = 0;
+	info.ssid = ssid;
+	info.bssid = mac;
+	return osal_wi_sniff(ap, buf, len, is_our_beacon, &info, &timeout);
+}
+
 static size_t get_offset_fixedparams(uint8_t *buf, size_t len)
 {
 	ieee80211header *hdr = (ieee80211header*)buf;

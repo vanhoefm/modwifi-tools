@@ -538,25 +538,6 @@ void update_ap_macmask(wi_dev *ap)
 }
 
 
-bool is_our_beacon(uint8_t *buf, size_t len, void *data)
-{
-	ieee80211header *hdr = (ieee80211header*)buf;
-	char ssid[256];
-
-	if (len < sizeof(ieee80211header) || hdr->fc.type != 0 || hdr->fc.subtype != 8
-		|| memcmp(hdr->addr1, "\xFF\xFF\xFF\xFF\xFF\xFF", 6) != 0)
-		return false;
-
-	if (memcmp(opt.bssid, hdr->addr2, 6) == 0)
-		return true;
-
-	if (beacon_get_ssid(buf, len, ssid, sizeof(ssid)) && strcmp(ssid, opt.ssid) == 0)
-		return true;
-
-	return false;
-}
-
-
 bool is_probe_resp(uint8_t *buf, size_t len, void *data)
 {
 	ieee80211header *hdr = (ieee80211header*)buf;
@@ -1263,15 +1244,12 @@ int handle_packet_clone(wi_dev *ap, wi_dev *clone, uint8_t *buf, size_t len, siz
 }
 
 
-int get_beacon(wi_dev *ap, uint8_t *buf, size_t len)
+int get_cloned_beacon(wi_dev *ap, uint8_t *buf, size_t len)
 {
 	ieee80211header *beaconhdr = (ieee80211header*)buf;
-	struct timespec timeout;
 	size_t beaconlen;
 
-	timeout.tv_sec = 1;
-	timeout.tv_nsec = 0;
-	beaconlen = osal_wi_sniff(ap, buf, len, is_our_beacon, NULL, &timeout);
+	beaconlen = get_beacon(ap, buf, len, opt.ssid, opt.bssid);
 	if (beaconlen <= 0) {
 		printf("Failed to capture beacon on AP interface\n");
 		return -1;
@@ -1374,7 +1352,7 @@ int channelmitm(wi_dev *ap, wi_dev *clone)
 	// 1. Get beacon of AP to clone
 	//
 
-	rval = get_beacon(ap, global.beaconbuf, sizeof(global.beaconbuf));
+	rval = get_cloned_beacon(ap, global.beaconbuf, sizeof(global.beaconbuf));
 	if (rval < 0) {
 		fprintf(stderr, "Failed to capture beacon of AP\n");
 		return -1;
