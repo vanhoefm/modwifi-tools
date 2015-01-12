@@ -2,11 +2,12 @@ CXX      := g++
 LD       := g++
 CPPFLAGS := -O3 -Wall -std=c++11 -g
 LIBS     := -lrt -lnl
+LIBSSL   := -lssl -lcrypto
 
-all: reactivejam
+all: reactivejam channelmitm
 
 clean:
-	rm -rf *.o *.d *~ reactivejam
+	rm -rf *.o *.d *~ reactivejam channelmitm
 
 .PHONY: clean all
 
@@ -19,4 +20,7 @@ include $(OBJ:%.o=%.d)
 
 reactivejam: reactivejam.o osal_wi.o osal_nl.o util.o MacAddr.o crc.o
 	$(LD) $(LIBS) reactivejam.o osal_wi.o osal_nl.o util.o MacAddr.o crc.o -o reactivejam
+
+channelmitm: channelmitm.o osal_wi.o osal_nl.o util.o MacAddr.o crc.o ClientInfo.o SeqnumType.o SeqnumStats.o eapol.o crypto.o pcap.o chopstate.o
+	$(LD) $(LIBS) $(LIBSSL) channelmitm.o osal_wi.o osal_nl.o util.o MacAddr.o crc.o ClientInfo.o SeqnumType.o SeqnumStats.o eapol.o crypto.o pcap.o chopstate.o -o channelmitm
 
