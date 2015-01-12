@@ -72,4 +72,7 @@ int osal_wi_set_mtu(wi_dev *dev, int mtu);
  */
 int osal_wi_jam_beacons(wi_dev *dev, const MacAddr &bssid, int msecs);
 
+int osal_wi_jamcont_start(wi_dev *dev);
+int osal_wi_jamcont_stop(wi_dev *dev);
+
 #endif // OSAL_WI_H__

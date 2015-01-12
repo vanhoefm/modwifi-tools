@@ -456,6 +456,21 @@ int osal_wi_jam_beacons(wi_dev *dev, const MacAddr &bssid, int msecs)
 }
 
 
+int osal_wi_jamcont_start(wi_dev *dev)
+{
+	fprintf(stderr, "%s: Not implemented\n", __FUNCTION__);
+
+	return 0;
+}
+
+int osal_wi_jamcont_stop(wi_dev *dev)
+{
+	fprintf(stderr, "%s: Not implemented\n", __FUNCTION__);
+
+	return 0;
+}
+
+
 //
 // Open Monitor Interface
 //
