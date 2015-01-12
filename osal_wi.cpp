@@ -214,6 +214,10 @@ int writeto(const std::string &filename, const std::string &content)
 	std::ofstream file;
 
 	file.open(filename);
+	if (!file.is_open()) {
+		std::cerr << "Failed to open " << filename << " for writing\n";
+		return -1;
+	}
 	file << content;
 	file.close();
 
@@ -296,6 +300,10 @@ static int readfrom(const std::string &filename)
 	std::string line;
 
 	file.open(filename);
+	if (!file.is_open()) {
+		std::cerr << "Failed to open " << filename << " for reading\n";
+		return -1;
+	}
 	file >> line;
 	file.close();
 
@@ -635,7 +643,11 @@ int osal_wi_write(wi_dev *dev, uint8_t *buf, size_t len)
 	memset(&tap, 0, sizeof(tap));
 	tap.it_len += sizeof(tap);
 	tap.it_present = RADIOTAP_INJECT_PRESENT;
-	tap.rate = 0; // FIXME
+	// Strageness: the rate in the radiotap header is generally ignored by the
+	// device/driver, in the sense that we cannot control the bitrate. However,
+	// when set to zero, injection of some frames will fail. In particular we
+	// encountered this when injecting a beacon.
+	tap.rate = 2;
 
 	if (len + sizeof(tap) > sizeof(tmpbuf)) {
 		fprintf(stderr, "%s: packet too big to send\n", __FUNCTION__);
