@@ -1834,6 +1834,8 @@ int main(int argc, char *argv[])
 	channelmitm(&ap, &clone);
 	printf("\n");
 
+	osal_wi_close(&ap);
+	osal_wi_close(&clone);
 	return 0;
 }
 

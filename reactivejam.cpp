@@ -195,6 +195,7 @@ int main(int argc, char *argv[])
 
 	reactivejam(&jam);
 
+	osal_wi_close(&jam);
 	return 0;
 }
 

@@ -867,8 +867,8 @@ int osal_wi_fastreply_start(wi_dev *dev, const MacAddr &source, int msecs)
 	return writetocmd(dev, "fastreply_start", command.str());
 }
 
-void osal_iw_close(int fd)
+void osal_wi_close(wi_dev *dev)
 {
-	close(fd);
+	close(dev->fd);
 }
 

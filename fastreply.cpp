@@ -320,6 +320,7 @@ int main(int argc, char *argv[])
 
 	fastreply(&dev);
 
+	osal_wi_close(&dev);
 	return 0;
 }
 
