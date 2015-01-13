@@ -1217,14 +1217,14 @@ int handle_packet_clone(wi_dev *ap, wi_dev *clone, uint8_t *buf, size_t len, siz
 		if (!opt.simul)
 		{
 			dbgout << " | Stop cont jam";
-			osal_wi_jamcont_stop(global.jam);
+			osal_wi_constantjam_stop(global.jam);
 			global.isjamming = false;
 		}
 		// If we've MitM'd our second client stop jamming
 		else if (client_list.size() == 2)
 		{
 			dbgout << " | Stop cont jam";
-			osal_wi_jamcont_stop(global.jam);
+			osal_wi_constantjam_stop(global.jam);
 			global.isjamming = false;
 		}
 		// Do nothing for the first MitM'd client
@@ -1410,7 +1410,7 @@ int channelmitm(wi_dev *ap, wi_dev *clone)
 
 	if (global.jam) {
 		std::cout << "[" << currentTime() << "]  " << "Started continuous jammer (cont jam)" << std::endl;
-		osal_wi_jamcont_start(global.jam);
+		osal_wi_constantjam_start(global.jam);
 		global.isjamming = true;
 	}
 
@@ -1490,7 +1490,7 @@ void handler_sigint(int signum)
 	fprintf(stderr, "\nStopping AP cloning...\n");
 	if (global.isjamming) {
 		fprintf(stderr, "Stopping jammer...\n");
-		osal_wi_jamcont_stop(global.jam);
+		osal_wi_constantjam_stop(global.jam);
 		global.isjamming = false;
 	}
 

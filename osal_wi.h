@@ -76,7 +76,7 @@ int osal_wi_jam_beacons(wi_dev *dev, const MacAddr &bssid, int msecs);
 int osal_wi_fastreply_packet(wi_dev *dev, uint8_t *buff, size_t len);
 int osal_wi_fastreply_start(wi_dev *dev, const MacAddr &source, int msecs);
 
-int osal_wi_jamcont_start(wi_dev *dev);
-int osal_wi_jamcont_stop(wi_dev *dev);
+int osal_wi_constantjam_start(wi_dev *dev);
+int osal_wi_constantjam_stop(wi_dev *dev);
 
 #endif // OSAL_WI_H__
