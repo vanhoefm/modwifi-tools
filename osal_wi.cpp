@@ -826,6 +826,47 @@ int osal_wi_include_badfcs(wi_dev *dev, bool includeBadFcs)
 	return 0;
 }
 
+int osal_wi_fastreply_packet(wi_dev *dev, uint8_t *buff, size_t len)
+{
+	char debugfsdir[PATH_MAX];
+	char file[PATH_MAX];
+	int fd, rval;
+
+	if (getdebugfsdir(debugfsdir) < 0)
+		return -1;
+
+	snprintf(file, sizeof(file), "%s/ieee80211/phy%d/ath9k_htc/fastreply_packet",
+		debugfsdir, dev->phyidx);
+
+	fd = open(file, O_WRONLY);
+	if (fd < 0) {
+		fprintf(stderr, "Failed to open %s for writing: ", file);
+		perror("");
+		return -1;
+	}
+
+	rval = write(fd, buff, len);
+	if (rval < 0) {
+		fprintf(stderr, "Error writing to %s: ", file);
+		perror("");
+		return -1;
+	}
+
+	close(fd);
+	
+	return 0;
+}
+
+
+int osal_wi_fastreply_start(wi_dev *dev, const MacAddr &source, int msecs)
+{
+	std::ostringstream command;
+
+	command << source << "," << msecs;
+
+	return writetocmd(dev, "fastreply_start", command.str());
+}
+
 void osal_iw_close(int fd)
 {
 	close(fd);

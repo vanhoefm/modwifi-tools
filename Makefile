@@ -24,3 +24,7 @@ reactivejam: reactivejam.o osal_wi.o osal_nl.o util.o MacAddr.o crc.o
 channelmitm: channelmitm.o osal_wi.o osal_nl.o util.o MacAddr.o crc.o ClientInfo.o SeqnumType.o SeqnumStats.o eapol.o crypto.o pcap.o chopstate.o
 	$(LD) $(LIBS) $(LIBSSL) channelmitm.o osal_wi.o osal_nl.o util.o MacAddr.o crc.o ClientInfo.o SeqnumType.o SeqnumStats.o eapol.o crypto.o pcap.o chopstate.o -o channelmitm
 
+fastreply: fastreply.o osal_wi.o osal_nl.o util.o MacAddr.o crc.o
+	$(LD) $(LIBS) fastreply.o osal_wi.o osal_nl.o util.o MacAddr.o crc.o -o fastreply
+
+

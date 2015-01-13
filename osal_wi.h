@@ -72,6 +72,10 @@ int osal_wi_set_mtu(wi_dev *dev, int mtu);
  */
 int osal_wi_jam_beacons(wi_dev *dev, const MacAddr &bssid, int msecs);
 
+/** Be the first to reply to a probe requests from a specific source */
+int osal_wi_fastreply_packet(wi_dev *dev, uint8_t *buff, size_t len);
+int osal_wi_fastreply_start(wi_dev *dev, const MacAddr &source, int msecs);
+
 int osal_wi_jamcont_start(wi_dev *dev);
 int osal_wi_jamcont_stop(wi_dev *dev);
 
