@@ -581,26 +581,17 @@ int osal_wi_read(wi_dev *dev, uint8_t *buf, size_t len)
 		return 0;
 	}
 
-	// Check if radiotap header is present
-	// TODO: proper handling of radiotap header.
-	if (tap->it_present & 2)
-	{
-		// tap header + postition flags
-		int posflags = 8 + ((tap->it_present & 1) ? 8 : 0);
-		if (buf[posflags] & 0x10)
-		{
-			// sanity check: is there enough space for the FCS?
-			if (tap->it_len + 4 > readlen)
-				return 0;
+	// TODO: Check radiotap header if FCS is present (this appeared unreliable though)
+	// sanity check: is there enough space for the FCS?
+	if (tap->it_len + 4 > readlen)
+		return 0;
 
-			// if bad FCS should be dropped, then drop it if it's invalid
-			if (!dev->includeBadFcs && !endswith_valid_crc(buf + tap->it_len, readlen - tap->it_len))
-				return 0;
-			
-			// otherwise remove the FCS
-			readlen -= 4;
-		}
-	}
+	// if packets with bad FCS should be dropped, then drop if needed
+	if (!dev->includeBadFcs && !endswith_valid_crc(buf + tap->it_len, readlen - tap->it_len))
+		return 0;
+	
+	// remove the FCS
+	readlen -= 4;
 
 	// remove radiotap header
 	readlen -= tap->it_len;
