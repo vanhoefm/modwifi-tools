@@ -29,7 +29,7 @@ struct global_t {
 char usage[] =
 
 "\n"
-"  fastreply - (C) 2013 Mathy Vanhoef\n"
+"  fastreply - Mathy Vanhoef\n"
 "\n"
 "  usage: fastreply <options>\n"
 "\n"

@@ -77,7 +77,7 @@ enum dbg_level {
 char usage[] =
 
 "\n"
-"  channelmitm - (C) 2013 Mathy Vanhoef\n"
+"  channelmitm - Mathy Vanhoef\n"
 "\n"
 "  usage: channelmitm <options>\n"
 "\n"

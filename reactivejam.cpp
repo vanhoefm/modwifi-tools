@@ -26,7 +26,7 @@ struct global_t {
 char usage[] =
 
 "\n"
-"  reactivejam - (C) 2013-2014 Mathy Vanhoef\n"
+"  reactivejam - Mathy Vanhoef\n"
 "\n"
 "  usage: reactivejam <options>\n"
 "\n"
