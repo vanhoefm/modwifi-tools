@@ -799,18 +799,18 @@ int osal_wi_getchannel(wi_dev *dev)
 int osal_wi_setchannel(wi_dev *dev, int channel)
 {
 	struct iwreq wrq;
-
-	//TODO: Support 5GHz channels
-	if (channel < 1 || channel > 13) {
-		fprintf(stderr, "%s: unsupported channel %d\n", __FUNCTION__, channel);
-		return -1;
-	}
+	int rval = 0;
 
 	memset(&wrq, 0, sizeof(wrq));
 	strncpy(wrq.ifr_name, dev->name, IFNAMSIZ);
 	wrq.u.freq.m = channel;
 
-	if (ioctl(dev->fd, SIOCSIWFREQ, &wrq) < 0) {
+	// Let the OS check if the channel was valid or not
+	rval = ioctl(dev->fd, SIOCSIWFREQ, &wrq);
+	if (rval == -EINVAL) {
+		fprintf(stderr, "%s: unsupported channel %d\n", __FUNCTION__, channel);
+		return -1;
+	} else if (rval < 0) {
 		fprintf(stderr, "Error in ioctl(SIOCSIWFREQ) of %s:", dev->name);
 		perror("");
 		return -1;
