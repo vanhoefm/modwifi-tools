@@ -39,7 +39,8 @@ char usage[] =
 "\n"
 //"      -p rateid    : Transmission rate ID for the jamming packet\n"
 "      -b bssid     : MAC address of AP to jam\n"
-"      -t sec       : Number of seconds to jam\n"
+"      -t sec       : Jam interval duration in seconds (jamming can only be stopped\n"
+"                     between intervals since the dongle CPU is busy when jamming)\n"
 "\n";
 
 void printUsage()
