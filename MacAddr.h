@@ -29,6 +29,7 @@ class MacAddr {
 		std::string tostring() const;
 		void setbuf(uint8_t mac[6]) const { memcpy(mac, macaddr, 6); }
 		bool empty() const;
+		bool multicast() const { return (macaddr[0] & 1); }
 
 	private:
 		friend std::ostream & operator<<(std::ostream &os, const MacAddr &mac);

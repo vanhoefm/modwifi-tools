@@ -30,17 +30,26 @@ char usage[] =
 "\n"
 "  usage: reactivejam <options>\n"
 "\n"
+"     Reactively jam beacons and probe responses. The end of the packets will be corrupted.\n"
+"     Hence the CRC of these packets is invalid, and they will be dropped by the reciever.\n"
+"     By modifying the firmware any type of medium/large packets can be targetted!\n"
+"\n"
+"     To detect corrupted frames in monitor mode: iw wlanX set monitor fcsfail\n"
+"\n"
 "  Attack options:\n"
 "\n"
-"      -i interface : Wireless interface to use as the jammer\n"
-"      -s ssid      : SSID of the Access Point (AP) to jam\n"
+"      -i interface : Wireless interface to use as the jammer (must be in monitor mode)\n"
+"      -s ssid      : SSID of the Access Point (AP) to jam. If not specified, all\n"
+"                     access points will be jammed.\n"
 "\n"
 "  Optional parameters:\n"
 "\n"
 //"      -p rateid    : Transmission rate ID for the jamming packet\n"
 "      -b bssid     : MAC address of AP to jam\n"
-"      -t sec       : Jam interval duration in seconds (jamming can only be stopped\n"
-"                     between intervals since the dongle CPU is busy when jamming)\n"
+"      -t sec       : Jam interval duration in seconds. Jamming can only be stopped\n"
+"                     between intervals since the dongle CPU is busy when jamming.\n"
+"                     The downside is that _between_ intervals some frames will be\n"
+"                     missed and hence won't be jammed.\n"
 "\n";
 
 void printUsage()
@@ -114,14 +123,9 @@ bool parseConsoleArgs(int argc, char *argv[])
 		return false;
 	}
 
-
+	// Set a broadcast MAC address to instruct firmware to jam all APs
 	if (opt.bssid.empty() && opt.ssid[0] == '\x0')
-	{
-		printf("You must specify either target a SSID (-s) or a BSSID (-b).\n");
-		printf("\"reactivejam --help\" for help.\n");
-		return false;
-	}
-
+		opt.bssid = MacAddr::parse("01:00:00:00:00:00");
 
 	return true;
 }
@@ -136,7 +140,7 @@ int find_ap(wi_dev *dev)
 
 	len = get_beacon(dev, buf, sizeof(buf), opt.ssid, opt.bssid);
 	if (len <= 0) {
-		printf("Failed to capture beacon on AP interface\n");
+		printf("Failed to capture beacon of target AP\n");
 		return -1;
 	}
 
@@ -158,14 +162,23 @@ int find_ap(wi_dev *dev)
 
 int reactivejam(wi_dev *jam)
 {
-	if (find_ap(jam) < 0) {
-		fprintf(stderr, "Unable to find target AP\n");
-		return -1;
+	if (opt.bssid.multicast())
+	{
+		std::cout << "Jamming all APs nearby (beacons and probe responses)\n";
 	}
+	else
+	{
+		if (find_ap(jam) < 0) {
+			fprintf(stderr, "Unable to find target AP\n");
+			return -1;
+		}
+		std::cout << "Jamming " << opt.bssid << " SSID " << opt.ssid << "\n";
+	}
+	std::cout << "\n  >> Press CTRL+C to exit << \n\n";
 
 	while (!global.exit)
 	{
-		fprintf(stderr, "=========== JAMMING BSSID =============\n");
+		fprintf(stderr, "=========== JAMMING =============\n");
 
 		if (osal_wi_jam_beacons(jam, opt.bssid, opt.seconds * 1000) < 0)
 		{
@@ -181,7 +194,7 @@ void handler_sigint(int signum)
 {
 	global.exit = true;
 
-	fprintf(stderr, "\nStopping jamming...\n");
+	fprintf(stderr, "\nStopping jamming, please wait ...\n");
 }
 
 int main(int argc, char *argv[])
