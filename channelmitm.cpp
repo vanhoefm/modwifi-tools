@@ -1569,7 +1569,7 @@ int test_seqnum_injection(wi_dev *inject, wi_dev *monitor, int type, int subtype
 	MacAddr src = MacAddr::random();
 
 	// create dummy data packet
-	memset(hdr, 0, sizeof(hdr));
+	memset(hdr, 0, sizeof(*hdr));
 	hdr->fc.type = type;
 	hdr->fc.subtype = subtype;
 	src.setbuf(hdr->addr1);
