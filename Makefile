@@ -19,14 +19,17 @@ include $(OBJ:%.o=%.d)
 	./depend.sh $(CPPFLAGS) $*.cpp > $@
 
 reactivejam: reactivejam.o osal_wi.o osal_nl.o util.o MacAddr.o crc.o
-	$(LD) $(LIBS) reactivejam.o osal_wi.o osal_nl.o util.o MacAddr.o crc.o -o reactivejam
+	$(LD) reactivejam.o osal_wi.o osal_nl.o util.o MacAddr.o crc.o $(LIBS) -o reactivejam
 
 channelmitm: channelmitm.o osal_wi.o osal_nl.o util.o MacAddr.o crc.o ClientInfo.o SeqnumType.o SeqnumStats.o eapol.o crypto.o pcap.o chopstate.o
-	$(LD) $(LIBS) $(LIBSSL) channelmitm.o osal_wi.o osal_nl.o util.o MacAddr.o crc.o ClientInfo.o SeqnumType.o SeqnumStats.o eapol.o crypto.o pcap.o chopstate.o -o channelmitm
+	$(LD) channelmitm.o osal_wi.o osal_nl.o util.o MacAddr.o crc.o ClientInfo.o SeqnumType.o SeqnumStats.o eapol.o crypto.o pcap.o chopstate.o $(LIBS) $(LIBSSL) -o channelmitm
 
 constantjam: constantjam.o osal_wi.o osal_nl.o util.o MacAddr.o crc.o
-	$(LD) $(LIBS) constantjam.o osal_wi.o osal_nl.o util.o MacAddr.o crc.o -o constantjam
+	$(LD) constantjam.o osal_wi.o osal_nl.o util.o MacAddr.o crc.o $(LIBS) -o constantjam
 
 fastreply: fastreply.o osal_wi.o osal_nl.o util.o MacAddr.o crc.o
-	$(LD) $(LIBS) fastreply.o osal_wi.o osal_nl.o util.o MacAddr.o crc.o -o fastreply
+	$(LD) fastreply.o osal_wi.o osal_nl.o util.o MacAddr.o crc.o $(LIBS) -o fastreply
+
+release: clean
+	cd .. && tar -cf tools.tar tools/ && cd -
 
