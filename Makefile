@@ -31,5 +31,5 @@ fastreply: fastreply.o osal_wi.o osal_nl.o util.o MacAddr.o crc.o
 	$(LD) fastreply.o osal_wi.o osal_nl.o util.o MacAddr.o crc.o $(LIBS) -o fastreply
 
 release: clean
-	cd .. && tar -cf tools.tar tools/ && cd -
+	cd .. && tar -cf tools.tar tools/ --exclude=".*" && cd -
 
