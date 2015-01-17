@@ -7,7 +7,7 @@ LIBSSL   := -lssl -lcrypto
 all: reactivejam channelmitm constantjam fastreply
 
 clean:
-	rm -rf *.o *.d *~ reactivejam channelmitm
+	rm -rf *.o *.d *~ reactivejam channelmitm constantjam fastreply
 
 .PHONY: clean all
 
