@@ -6,7 +6,7 @@
 #define PREPACK __attribute__ ((__packed__))
 
 /** http://www.radiotap.org/ */
-typedef struct ieee80211_radiotap_header {
+typedef struct PREPACK ieee80211_radiotap_header {
         uint8_t        it_version;     /* set to 0 */
         uint8_t        it_pad;
         uint16_t       it_len;         /* entire length */
@@ -47,9 +47,9 @@ enum CONTROL {
 };
 
 /** IEEE Std 802.11-2007 paragraph 7.1 MAC frame formats */
-typedef struct ieee80211header {
+typedef struct PREPACK ieee80211header {
 	/** 7.1.3.1 Frame Control Field */
-	struct fc
+	struct PREPACK fc
 	{
 		uint8_t version : 2;
 		/** see IEEE802.11-2012 8.2.4.1.3 Type and Subtype fields */
@@ -71,7 +71,7 @@ typedef struct ieee80211header {
 	uint8_t addr2[6];
 	uint8_t addr3[6];
 	/** 7.1.3.4 Sequence Control Field */
-	struct sequence
+	struct PREPACK sequence
 	{
 		uint8_t fragnum : 4;
 		uint16_t seqnum : 12;
@@ -85,7 +85,7 @@ static inline bool ieee80211_dataqos(const ieee80211header *hdr) {
 
 /** 7.1.3.5 QoS Control field. This is not present in all frames, and exact
  * usage of the bits depends on the type/subtype. Here we assume QoS data frame. */
-typedef struct ieee80211qosheader {
+typedef struct PREPACK ieee80211qosheader {
 	// 7.1.3.5.1 TID subfield. Allowed values depend on Access Policy (7.3.2.30).
 	uint8_t tid : 4;
 	uint8_t eosp : 1;
@@ -95,9 +95,9 @@ typedef struct ieee80211qosheader {
 } ieee80211qosheader;
 
 /** IEEE Std 802.11-2007 paragraph 8.3.3.2 TKIP MPDU formats */
-typedef struct tkipheader
+typedef struct PREPACK tkipheader
 {
-	struct iv
+	struct PREPACK iv
 	{
 		uint8_t tsc1;
 		uint8_t wepseed;
@@ -106,7 +106,7 @@ typedef struct tkipheader
 		uint8_t extendediv : 1;
 		uint8_t keyid : 2;
 	} iv;
-	struct eiv
+	struct PREPACK eiv
 	{
 		uint8_t tsc2;
 		uint8_t tsc3;
@@ -116,7 +116,7 @@ typedef struct tkipheader
 } tkipheader;
 
 /** IEEE Std 802.11-2007 paragraph 8.3.3.2 TKIP MPDU formats */
-typedef struct tkiptail
+typedef struct PREPACK tkiptail
 {
 	uint8_t mic[8];
 	uint8_t icv[4];
@@ -124,7 +124,7 @@ typedef struct tkiptail
 
 static const int TIMEUNIT_USEC = 1024;
 
-typedef struct ieee802211fixedparams {
+typedef struct PREPACK ieee802211fixedparams {
 	// Value of the timing synchronization function (TSF)
 	uint64_t timestamp;
 	// Number of time units (TUs) between target beacon transmission times (TBTTs)
@@ -133,7 +133,7 @@ typedef struct ieee802211fixedparams {
 	uint16_t capabilities;
 } ieee802211fixedparams;
 
-typedef struct llcsnaphdr
+typedef struct PREPACK llcsnaphdr
 {
 	uint8_t dsap;
 	uint8_t ssap;
@@ -144,13 +144,13 @@ typedef struct llcsnaphdr
 
 static const uint16_t DOT1X_AUTHENTICATION = 0x8E88;
 
-struct ieee80211xauth
+struct PREPACK ieee80211xauth
 {
 	uint8_t ver;
 	uint8_t type;
 	uint16_t len;
 	uint8_t desctype;
-	struct {
+	struct PREPACK {
 		uint8_t mic : 1;
 		uint8_t secure : 1;
 		uint8_t error : 1;
@@ -175,7 +175,7 @@ struct ieee80211xauth
 } __attribute__((packed));
 
 // TODO: put this somewhere else
-struct arppacket
+struct PREPACK arppacket
 {
 	uint16_t hardwaretype;
 	uint16_t protocoltype;
