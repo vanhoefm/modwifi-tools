@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
 
 	osal_wi_constantjam_start(&dev);
 
-	printf("Jamming channel %d. Press any key to stop ...\n", osal_wi_getchannel(&dev));
+	printf("Jamming channel %d. Press ENTER to stop ...\n", osal_wi_getchannel(&dev));
 	getchar();
 
 	osal_wi_constantjam_stop(&dev);
