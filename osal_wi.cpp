@@ -679,7 +679,7 @@ int osal_wi_write(wi_dev *dev, uint8_t *buf, size_t len)
 	if (rval < 0 || (size_t)rval != len) {
 		fprintf(stderr, "Write failed on interface %s:", dev->name);
 		perror("");
-		fprintf(stderr, "Wanted to send %d bytes (with radiotap header of %d bytes)\n", len, sizeof(radiotap_inject));
+		fprintf(stderr, "Wanted to send %d bytes (with radiotap header of %d bytes)\n", (int)len, (int)sizeof(radiotap_inject));
 		return -1;
 	}
 	rval -= sizeof(tap);
@@ -783,13 +783,17 @@ int osal_wi_getchannel(wi_dev *dev)
 		frequency/=1000;
 
 	// channels in 2.4GHz range start at 2412kHz and incease with 5kHz for each channel number.
-	if (frequency >= 3000) {
-		fprintf(stderr, "%s: TODO: Convert frequency other than 2.4GHz range to channel number\n",
-			__FUNCTION__);
-		return -1;
-	}
+	if (frequency >= 2412 && frequency <= 2472)
+		return (frequency - 2412) / 5 + 1;
+	// channel 14 is a special case
+	if (frequency == 2484)
+		return 14;
+	// channel 34 to 64 in 5 GHZ range
+	if (frequency >= 5170 && frequency <= 5320)
+		return 34 + (frequency - 5170) / 5;
 
-	return (frequency - 2412) / 5 + 1;
+	fprintf(stderr, "%s: TODO: Convert frequency %d to channel number\n", __FUNCTION__, frequency);
+	return -1;
 }
 
 int osal_wi_setchannel(wi_dev *dev, int channel)
