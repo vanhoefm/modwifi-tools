@@ -29,7 +29,12 @@ int main(int argc, char *argv[])
 	}
 
 	if (osal_wi_open(argv[1], &dev) < 0) return 1;
-	if (argc >= 3) osal_wi_setchannel(&dev, atoi(argv[2]));
+	if (argc >= 3) {
+		if (osal_wi_setchannel(&dev, atoi(argv[2])) < 0) {
+			fprintf(stderr, "Failed to set channel\n");
+			return 1;
+		}
+	}
 
 	osal_wi_constantjam_start(&dev);
 
