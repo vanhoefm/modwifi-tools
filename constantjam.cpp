@@ -33,6 +33,7 @@ int main(int argc, char *argv[])
 
 	osal_wi_constantjam_start(&dev);
 
+	printf("\n\tRemember: public firmware doesn't support constant jamming!\n\n");
 	printf("Jamming channel %d. Press ENTER to stop ...\n", osal_wi_getchannel(&dev));
 	getchar();
 
