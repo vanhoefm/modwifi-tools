@@ -497,6 +497,13 @@ int beacon_get_chan(uint8_t *buf, size_t len)
 			else
 				return -1;
 		}
+		// is it the HT Information element?
+		if (buf[pos] == 61) {
+			if (buf[pos + 2] >= 34 && buf[pos + 2] <= 165)
+				return buf[pos + 2];
+			else
+				return -1;
+		}
 
 		// move to next parameter
 		pos += 2 + buf[pos + 1];

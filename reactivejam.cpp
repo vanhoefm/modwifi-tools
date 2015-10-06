@@ -150,6 +150,10 @@ int find_ap(wi_dev *dev)
 
 	// Check channel of network
 	chan = beacon_get_chan(buf, len);
+	if (chan == -1) {
+		fprintf(stderr, "Failed to read channel from beacon\n");
+		return -1;
+	}
 	if (chan != osal_wi_getchannel(dev)) {
 		printf("Changing channel of %s to %d\n", dev->name, chan);
 		osal_wi_setchannel(dev, chan);
