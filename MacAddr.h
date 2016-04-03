@@ -1,7 +1,7 @@
 #ifndef JAMMER_MACADDR_H
 #define JAMMER_MACADDR_H
 
-//#include <stdint.h>
+#include <stdint.h>
 #include <string.h>
 #include <string>
 //#include <cstddef>

@@ -1,6 +1,8 @@
 #include <stdarg.h>
 #include <getopt.h>
 #include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <stdexcept>
 #include <iostream>
 

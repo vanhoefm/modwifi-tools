@@ -1,6 +1,10 @@
-*.d
 *~
-*.o
+CMakeFiles/
+libutil.a
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
 reactivejam
 constantjam
 channelmitm
