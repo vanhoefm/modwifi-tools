@@ -97,7 +97,7 @@ int pcap_read_packet(PCAPFILE fp, void *buf, size_t len, uint64_t *tsf)
 	}
 
 	if (pkthdr.caplen > len) {
-		fprintf(stderr, "Buffer too small (size %d) for packet in pcap file (size %d)\n", len, pkthdr.caplen);
+		fprintf(stderr, "Buffer too small (size %zu) for packet in pcap file (size %d)\n", len, pkthdr.caplen);
 		return -2;
 	}
 

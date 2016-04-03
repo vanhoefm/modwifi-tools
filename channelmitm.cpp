@@ -942,7 +942,7 @@ int build_arping_request(uint8_t *buf, size_t len, const arping_opt &pingopt)
 	size_t buflen = sizeof(ieee80211header) + sizeof(llcsnaphdr) + sizeof(arppacket);
 
 	if (len < buflen) {
-		fprintf(stderr, "%s: buffer too small (%d)\n", __FUNCTION__, len);
+		fprintf(stderr, "%s: buffer too small (%zu)\n", __FUNCTION__, len);
 		return -1;
 	}
 

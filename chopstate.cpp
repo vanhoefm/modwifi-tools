@@ -183,7 +183,7 @@ bool ChopState::advance()
 	// verify keystream if we have decrypted packet
 	if (have_decrypted && keystream[pos] != (decrypted[pos] ^ original[pos]))
 	{
-		fprintf(stderr, "%s: WARNING: Wrong guess for pos %d (is %d, should be %d)\n",
+		fprintf(stderr, "%s: WARNING: Wrong guess for pos %zu (is %d, should be %d)\n",
 			__FUNCTION__, pos, guess, decrypted[pos]);
 		iscorrect = false;
 	}

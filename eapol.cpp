@@ -124,7 +124,7 @@ int calculate_gtk(eapol_sta_info *sta, ieee80211xauth *auth, size_t len)
 	plainlen = decrypt_eapol_key_data(auth->iv, sta->ptk.kek, (EapolKeyVer)auth->inf.keyver,
 			(uint8_t*)(auth + 1), plain, keydatalen);
 	if (plainlen <= 0) {
-		fprintf(stderr, "%s: Failed to decrypt EAPOL-WPA Key Data: %d\n", __FUNCTION__, len);
+		fprintf(stderr, "%s: Failed to decrypt EAPOL-WPA Key Data: %zu\n", __FUNCTION__, len);
 	} else {
 		// FIXME: Properly parse RSN Information Element fields....
 		int gtkpos = plain[1] + 2 + 8;
