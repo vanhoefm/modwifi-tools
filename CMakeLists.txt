@@ -1,8 +1,11 @@
 cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
 set(CMAKE_CXX_STANDARD 11)
 
+# FIXME: Search for this path instead of hardcoding it
+include_directories(/usr/include/libnl3)
+
 add_library(util osal_wi.cpp osal_nl.cpp util.cpp MacAddr.cpp crc.cpp eapol.cpp crypto.cpp pcap.cpp)
-target_link_libraries(util nl ssl crypto)
+target_link_libraries(util nl-3 nl-genl-3 ssl crypto)
 
 
 project(reactivejam)
