@@ -47,7 +47,7 @@ char usage[] =
 "  Optional parameters:\n"
 "\n"
 //"      -p rateid    : Transmission rate ID for the jamming packet\n"
-"      -b bssid     : MAC address of AP to jam\n"
+"      -b bssid     : MAC address of AP to jam (instead of SSID, e.g. to jam hidden network)\n"
 "      -t sec       : Jam interval duration in seconds. Jamming can only be stopped\n"
 "                     between intervals since the dongle CPU is busy when jamming.\n"
 "                     The downside is that _between_ intervals some frames will be\n"
