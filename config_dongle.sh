@@ -37,6 +37,10 @@ fi
 echo -e "\nConfigure intrefaces"
 
 ifnames=$(iw dev | grep -E -o "Interface (.+)" | grep -E -o "\s.+$" | grep -E -o "[a-z0-9]+")
+if [[ $interface == "" ]]; then
+	echo "No interfaces detected"
+	exit
+fi
 echo "$ifnames" | while IFS= read -r interface; do
 	print_exec "ip link set $interface down"
 	print_exec "iw $interface set type monitor"
