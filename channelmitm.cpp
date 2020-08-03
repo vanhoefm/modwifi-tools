@@ -1269,7 +1269,8 @@ int get_cloned_beacon(wi_dev *ap, uint8_t *buf, size_t len)
 	// initialize beacon we will forward
 	beacon_set_chan(buf, beaconlen, opt.clonechan);
 	if (opt.testmode) {
-		char newssid[128];
+		// max length of ssid is 32bytes
+		char newssid[32];
 		snprintf(newssid, sizeof(newssid), "%s_clone", opt.ssid);
 		beacon_set_ssid(buf, &beaconlen, len, newssid);
 
@@ -1316,7 +1317,8 @@ int get_probe_response(wi_dev *ap, uint8_t *buf, size_t len)
 	// initialize probe response we will use
 	beacon_set_chan(buf, proberesplen, opt.clonechan);
 	if (opt.testmode) {
-		char newssid[128];
+		// Max length of ssid is 32 bytes
+		char newssid[32];
 		snprintf(newssid, sizeof(newssid), "%s_clone", opt.ssid);
 		beacon_set_ssid(buf, &proberesplen, len, newssid);
 	}
