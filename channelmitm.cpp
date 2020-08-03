@@ -39,6 +39,7 @@
 #include "eapol.h"
 #include "chopstate.h"
 #include "crypto.h"
+#include "probe_requests.h"
 
 #include "MacAddr.h"
 #include "ClientInfo.h"
@@ -1287,21 +1288,34 @@ int get_cloned_beacon(wi_dev *ap, uint8_t *buf, size_t len)
 
 int get_probe_response(wi_dev *ap, uint8_t *buf, size_t len)
 {
-	uint8_t probereq[128];
-	ieee80211header *probehdr = (ieee80211header*)probereq;
+	uint8_t size_empty_ssid = 2;
+	//TODO: Check for AP adapter and set probe req. tags respectivly.
+	uint8_t *probereqtags = netgear_probe_tags;
+	uint8_t probetagslen = netgear_probe_tags_len;
+
+	// max length of ssid is 32 bytes
+	uint8_t probereq[sizeof(ieee80211header) + size_empty_ssid + 32 + probetagslen];
+	ieee80211header *probehdr = (ieee80211header*) probereq;
 	struct timespec timeout;
 	size_t probereqlen, proberesplen;
 
-	// Dot11 SSID Element (empty) is 4 zero bytes
-	memset(probereq, 0, sizeof(ieee80211header) + 4);
+	memset(probereq, 0, sizeof(ieee80211header) + size_empty_ssid);
 	probehdr->fc.type = 0;
 	probehdr->fc.subtype = 4;
 	memcpy(probehdr->addr1, "\xFF\xFF\xFF\xFF\xFF\xFF", 6);
 	memcpy(probehdr->addr2, "\x12\x34\x56\x78\x9A\xBC", 6);
 	memcpy(probehdr->addr3, "\xFF\xFF\xFF\xFF\xFF\xFF", 6);
 	
-	probereqlen = sizeof(ieee80211header) + 4;
+	// An empty Dot11 SSID element is 2 zero bytes
+	probereqlen = sizeof(ieee80211header) + size_empty_ssid;
+
+	// beacon_set_ssid updates probereqlen to sizeof(ieee80211header) + ssid tag
 	beacon_set_ssid(probereq, &probereqlen, sizeof(probereq), opt.ssid);
+
+	// Append tags
+	memcpy(probereq + probereqlen, probereqtags, probetagslen);
+	probereqlen += probetagslen;
+
 	//dump_packet(probereq, probereqlen);
 	if (osal_wi_write(ap, probereq, probereqlen) < 0)
 		return -1;
@@ -1309,7 +1323,7 @@ int get_probe_response(wi_dev *ap, uint8_t *buf, size_t len)
 	timeout.tv_sec = 1;
 	timeout.tv_nsec = 0;
 	proberesplen = osal_wi_sniff(ap, buf, len, is_probe_resp, (void*)"\x12\x34\x56\x78\x9A\xBC", &timeout);
-	if (proberesplen < 0) {
+	if (proberesplen <= 0) {
 		fprintf(stderr, "Failed to capture probe response\n");
 		return -1;
 	}
