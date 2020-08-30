@@ -386,15 +386,22 @@ int osal_wi_ping(wi_dev *dev, const MacAddr &dst)
 	// generate a random source MAC address to use
 	MacAddr src = MacAddr::random();
 
-	// create dummy packet
-	ieee80211header hdr;
-	dst.setbuf(hdr.addr1);
-	src.setbuf(hdr.addr2);
-	hdr.sequence.seqnum = rand();
+	// Generate dummy packet
+	uint8_t dummypkt[128];
+	ieee80211header *dummyhdr = (ieee80211header*) dummypkt;
+	size_t dummylen;
+
+	memset(dummypkt, 0, sizeof(ieee80211header));
+	dummyhdr->fc.type = 0;
+	dummyhdr->fc.subtype = 0;
+	dst.setbuf(dummyhdr->addr1);
+	src.setbuf(dummyhdr->addr2);
+	
+	dummylen = sizeof(dummypkt);
 
 	// send the packet
-	//std::cout << "Pinging " << dst << " using MAC " << src << std::endl;
-	if (osal_wi_write(dev, (uint8_t*)&hdr, sizeof(hdr)) < 0) {
+	std::cout << "\tPinging " << dst << " using MAC " << src << "(random)" << std::endl;
+	if (osal_wi_write(dev, dummypkt, dummylen) < 0) {
 		fprintf(stderr, "Failed to inject ping packet\n");
 		return -1;
 	}
